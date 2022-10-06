@@ -1,0 +1,15 @@
+Check if a given number is a perfect square.
+
+hai n;
+da-mi n;
+hai i = 0;
+da-i sa sune (i*i < n) {
+	i creste 1;
+}
+
+daca e (i*i) frate n {
+	zi-le "DA";
+}
+daca nu {
+	zi-le "NU";
+}

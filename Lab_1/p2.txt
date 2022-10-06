@@ -1,0 +1,12 @@
+Compute the gcd of 2 given numbers.
+
+hai a,b;
+da-mi a, b;
+hai r = a % b;
+hai ca = a, cb = b;
+da-i sa sune (b nu-i frate 0) {
+	a = b;
+	b = r;
+	r = a%b;
+}
+zi-le "gcd of $ca and $cb is $a";
