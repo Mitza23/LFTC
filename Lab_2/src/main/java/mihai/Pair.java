@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 
 import java.util.Objects;
 
+/**
+Represents a pair that is going to be stored in the HashTable
+*/
 @AllArgsConstructor
 public class Pair<K, V> {
     public K key;
