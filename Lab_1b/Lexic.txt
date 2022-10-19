@@ -1,0 +1,54 @@
+Alphabet:
+
+a. Upper (A-Z) and lower case letters (a-z) of the English alphabet
+
+       b. Decimal digits (0-9);
+
+       c. Non alphanumeric characters: '-', '_';
+
+Lexic:
+
+      a.Special symbols, representing:
+
+- operators + - * / = == += -= *= /=
+
+- separators ( ) [ ] { } ; space
+
+- reserved words:
+
+    int char if else for while read print 
+
+
+      b.identifiers
+
+  -a sequence of letters and  digits, such that the first character is a letter; the rule is:
+
+    identifier ::= letter | letter{-}{_}{letter}{digit}
+
+    letter ::= "a" | ... | "z" | "A" | "B" | ... | "Z"
+
+    digit ::= "0" | "1" |...| "9"
+
+
+      c.constants
+
+1.integer - rule:
+
+      int:="+"no|"-"no|no
+	
+	nonZeroDigit:= "1" |...| "9"
+
+      no:=nonZeroDigit | no{digit}
+
+2.character
+
+    character:="'"letter"'"|"'"digit"'"
+
+3.array
+
+      array:=digitArray | charArray
+
+      charArray:=char | charArray{char}
+
+      digitArray:=digit | digitArray{digit}
+

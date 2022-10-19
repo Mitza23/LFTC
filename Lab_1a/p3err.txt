@@ -1,0 +1,14 @@
+Compute the sum of n given numbers, where n is given.
+
+int n -- syntax error, unknown instantiation
+read(n);
+int x;
+s = 0; -- syntax error, can not fin s
+int i;
+i = 0
+while(i < n) {
+	read(x);
+	s += x;
+	i += 1;
+}
+print s; -- syntax error, print is a function

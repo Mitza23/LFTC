@@ -1,0 +1,44 @@
+program ::=  stmtlist
+
+declaration ::= type IDENTIFIER";"
+
+type1 ::= "char" | "int"
+
+arraydecl ::= type1 "[" nr "]" IDENTIFIER
+
+type  ::= type1|arraydecl
+
+stmtlist ::= stmt";" | stmt ";" stmtlist
+
+stmt ::= simplstmt | structstmt | declaration
+
+simplstmt ::= assignstmt | iostmt
+
+assignstmt ::= IDENTIFIER "=" expression |
+IDENTIFIER "+=" expression |
+IDENTIFIER "-=" expression |
+IDENTIFIER "*=" expression |
+IDENTIFIER "/=" expression |
+
+expression ::= expression "+" term | 
+expression "-" term |
+expression "*" term |
+expression "/" term |
+term
+
+
+term ::= IDENTIFIER | charArray | no
+
+iostmt ::= "read" "(" IDENTIFIER ")" | "print(" IDENTIFIER ")" | 
+"print(" charArray")" | "print(" no ")"
+
+structstmt ::= stmtlist | structstmt ifstmt | structstmt whilestmt
+
+ifstmt ::= "if(" condition  ") {" structstmt "} else {" structstmt "}"| 
+"if(" condition  ") {" structstmt "}"
+
+whilestmt ::= "while(" condition ") {" stmt "}
+
+condition ::= expression RELATION expression
+
+RELATION ::= "<" | "<=" | "=" | "!=" | ">=" | ">"

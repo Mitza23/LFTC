@@ -1,0 +1,15 @@
+Compute the sum of n given numbers, where n is given.
+
+int n;
+read(n);
+int x;
+int s
+s = 0;
+int i;
+i = 0
+while(i < n) {
+	read(x);
+	s += x;
+	i += 1;
+}
+print(s);
