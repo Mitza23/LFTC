@@ -50,5 +50,5 @@ Lexic:
 
       charArray:=char | charArray{char}
 
-      digitArray:=digit | digitArray{digit}
+      digitArray:=int | digitArray","{int}
 

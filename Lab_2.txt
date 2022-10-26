@@ -1,0 +1,2 @@
+Documentation is in code
+https://github.com/Mitza23/LFTC/tree/main/Lab_2
