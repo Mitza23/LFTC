@@ -2,6 +2,7 @@ package mihai;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        ProgramScanner programScanner = new ProgramScanner("tokens.txt");
+        programScanner.readTokens();
     }
 }

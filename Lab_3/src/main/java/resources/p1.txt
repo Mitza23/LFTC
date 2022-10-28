@@ -1,0 +1,17 @@
+int n;
+read(n);
+int i = 0;
+char[3] da;
+da = "DA";
+char[3] nu;
+nu = "NU";
+while(i*i < n) {
+	i += 1;
+}
+
+if(i*i == n) {
+	print(da);
+}
+else {
+	print(nu);
+}

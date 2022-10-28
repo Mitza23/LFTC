@@ -1,22 +1,25 @@
 package mihai;
 
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
-*HashTable is the basic ADT that will work as a hashtable is expected to work
-*/
-@Getter
+ * HashTable is the basic ADT that will work as a hashtable is expected to work
+ */
 public class HashTable<K, V> {
     private List<List<Pair<K, V>>> list; // thow the table is represented
+
+    public List<List<Pair<K, V>>> getList() {
+        return list;
+    }
+
     private int n; // the number of different buckets in the table
 
     public HashTable() {
         n = 101;
         list = new ArrayList<>(n);
-        for(int i = 0 ; i < n ; i++) {
+        for (int i = 0; i < n; i++) {
             list.add(new ArrayList<>());
         }
     }

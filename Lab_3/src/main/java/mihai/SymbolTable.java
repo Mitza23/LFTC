@@ -25,12 +25,13 @@ public class SymbolTable {
 
     /**
      * Adds a new variable to the Identifiers table and a new constant in the CT in case it's needed
+     *
      * @param identifier
      * @param value
      */
-    public void addVariable(String identifier, Object value) {
+    public int addVariable(String identifier, Object value) {
         int pos = addConstant(value);
-        identifiersTable.add(new Pair<>(identifier, pos));
+        return identifiersTable.add(new Pair<>(identifier, pos));
     }
 
     /**
