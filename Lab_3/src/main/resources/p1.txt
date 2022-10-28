@@ -5,11 +5,11 @@ char[3] da;
 da = "DA";
 char[3] nu;
 nu = "NU";
-while(i*i < n) {
+while(i * i < n) {
 	i += 1;
 }
 
-if(i*i == n) {
+if(i * i == n) {
 	print(da);
 }
 else {

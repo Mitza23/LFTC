@@ -9,13 +9,20 @@ char
 - 
 * 
 /
+<
+>
+<=
+>=
 if 
 else 
 for 
 while
 print
 read
-( ) 
-[ ] 
-{ } 
+(
+)
+[
+]
+{
+}
 ;

@@ -4,9 +4,9 @@ package mihai;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import static mihai.Constants.CONSTANT;
 import static mihai.Constants.IDENTIFIER;
@@ -17,6 +17,8 @@ public class ProgramScanner {
     List<Pair<String, Integer>> pif;
     List<String> symbolTable;
     List<String> constantsTable;
+
+    String delimiters = " ;()[]{}";
 
 //    SymbolTable symbolTable;
 
@@ -32,9 +34,13 @@ public class ProgramScanner {
     public void readTokens() {
         try (Scanner scanner = new Scanner(new File(tokensFile))) {
             while (scanner.hasNext()) {
-                String line = scanner.nextLine();
+                String line = scanner.nextLine().strip();
                 tokens.add(line);
             }
+            tokens.add(" ");
+//            for(var t : tokens) {
+//                System.out.println("[" + t + "]");
+//            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +55,7 @@ public class ProgramScanner {
     }
 
     public boolean isConstant(String token) {
-        return token.matches("\"[a-zA-Z0-9]+\"|'[a-zA-Z0-9]'|[1-9][0-9]*");
+        return token.matches("\"[a-zA-Z0-9]+\"|'[a-zA-Z0-9]'|[0-9]|[1-9][0-9]*");
     }
 
     public int addConstant(String token) {
@@ -72,35 +78,40 @@ public class ProgramScanner {
         return symbolTable.size() - 1;
     }
 
-    public void readFile(String filename) {
+    public String readFile(String filename) {
         try (Scanner scanner = new Scanner(new File(filename))) {
             int lineCount = 0;
+            String PIF = "";
             while (scanner.hasNext()) {
+                String toPrint = "";
                 String line = scanner.nextLine();
                 lineCount += 1;
-//                var words = line.split("[ {}\\[\\]()=;\"]+");
-                var words = line.split(" +");
-                System.out.println(Arrays.toString(words));
-                int index = 0;
-                for (var token : words) {
-                    if (isReserved(token)) {
-                        pif.add(new Pair<>(token, -1));
-                        if (token.equals("=")) ;
-                    } else {
-                        if (isConstant(token)) {
-                            int pos = addConstant(token);
-                            pif.add(new Pair<>(CONSTANT, pos));
-                        } else if (isIdentifier(token)) {
-                            int pos = addSymbol(token);
-                            pif.add(new Pair<>(IDENTIFIER, pos));
+                var tokenizer = new StringTokenizer(line, delimiters, true);
+                while(tokenizer.hasMoreTokens()) {
+                    var token = tokenizer.nextToken();
+                    if (!token.equals(" ")) {
+                        token = token.strip();
+//                        System.out.println("[" + token + "]");
+                        toPrint += "[" + token + "]  ";
+                        if (isReserved(token)) {
+                            pif.add(new Pair<>(token, -1));
+                            if (token.equals("=")) ;
                         } else {
-                            throw new SyntaxError("Syntax error: unidentified token " + token + " on line " + lineCount);
+                            if (isConstant(token)) {
+                                int pos = addConstant(token);
+                                pif.add(new Pair<>(CONSTANT, pos));
+                            } else if (isIdentifier(token)) {
+                                int pos = addSymbol(token);
+                                pif.add(new Pair<>(IDENTIFIER, pos));
+                            } else {
+                                throw new SyntaxError("Syntax error: unidentified token [" + token + "] on line " + lineCount);
+                            }
                         }
                     }
-                    index += 1;
                 }
+                PIF += toPrint + "\n";
             }
-
+            return PIF;
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
