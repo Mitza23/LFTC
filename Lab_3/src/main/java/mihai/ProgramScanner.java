@@ -11,6 +11,9 @@ import java.util.StringTokenizer;
 import static mihai.Constants.CONSTANT;
 import static mihai.Constants.IDENTIFIER;
 
+/**
+ * ProgramScanner class is used to read an input program and break it down into tokens
+ */
 public class ProgramScanner {
     String tokensFile;
     List<String> tokens;
@@ -31,6 +34,9 @@ public class ProgramScanner {
         constantsTable = new ArrayList<>();
     }
 
+    /**
+     * Reads predefined tokens such as separators, keywords and operators
+     */
     public void readTokens() {
         try (Scanner scanner = new Scanner(new File(tokensFile))) {
             while (scanner.hasNext()) {
@@ -46,18 +52,42 @@ public class ProgramScanner {
         }
     }
 
+    /**
+     * Checks if a token is part of the tokens.in file
+     *
+     * @param token
+     * @return
+     */
     public boolean isReserved(String token) {
         return tokens.contains(token);
     }
 
+    /**
+     * Checks to see if a toke is an identifier according to the rules of the language
+     *
+     * @param token
+     * @return
+     */
     public boolean isIdentifier(String token) {
         return token.matches("[a-zA-Z]+[a-zA-Z0-9]*");
     }
 
+    /**
+     * Checks to see if a token is a constant according to the rules of the language
+     *
+     * @param token
+     * @return
+     */
     public boolean isConstant(String token) {
-        return token.matches("\"[a-zA-Z0-9]+\"|'[a-zA-Z0-9]'|[0-9]|[1-9][0-9]*");
+        return token.matches("\"[a-zA-Z0-9]+\"|\'[a-zA-Z0-9]\'|[0-9]|[1-9][0-9]*");
     }
 
+    /**
+     * Adds a new constant to the constants table or just returns its position if its already present
+     *
+     * @param token
+     * @return
+     */
     public int addConstant(String token) {
         for (int i = 0; i < constantsTable.size(); i++) {
             if (constantsTable.get(i).equals(token)) {
@@ -68,6 +98,12 @@ public class ProgramScanner {
         return constantsTable.size() - 1;
     }
 
+    /**
+     * Adds a new symbol to the symbols table or just returns its position if its already present
+     *
+     * @param token
+     * @return
+     */
     public int addSymbol(String token) {
         for (int i = 0; i < symbolTable.size(); i++) {
             if (symbolTable.get(i).equals(token)) {
@@ -78,7 +114,26 @@ public class ProgramScanner {
         return symbolTable.size() - 1;
     }
 
-    public String readFile(String filename) {
+    public List<String> getSymbolTable() {
+        return symbolTable;
+    }
+
+    public List<String> getConstantsTable() {
+        return constantsTable;
+    }
+
+    public String getDelimiters() {
+        return delimiters;
+    }
+
+    /**
+     * This function is intended to read a program file and break it down into tokens by generating the PIF
+     * while populating the constants table and the symbol table
+     *
+     * @param filename
+     * @return
+     */
+    public List<Pair<String, Integer>> readFile(String filename) {
         try (Scanner scanner = new Scanner(new File(filename))) {
             int lineCount = 0;
             String PIF = "";
@@ -87,7 +142,7 @@ public class ProgramScanner {
                 String line = scanner.nextLine();
                 lineCount += 1;
                 var tokenizer = new StringTokenizer(line, delimiters, true);
-                while(tokenizer.hasMoreTokens()) {
+                while (tokenizer.hasMoreTokens()) {
                     var token = tokenizer.nextToken();
                     if (!token.equals(" ")) {
                         token = token.strip();
@@ -95,7 +150,6 @@ public class ProgramScanner {
                         toPrint += "[" + token + "]  ";
                         if (isReserved(token)) {
                             pif.add(new Pair<>(token, -1));
-                            if (token.equals("=")) ;
                         } else {
                             if (isConstant(token)) {
                                 int pos = addConstant(token);
@@ -111,9 +165,8 @@ public class ProgramScanner {
                 }
                 PIF += toPrint + "\n";
             }
-            return PIF;
-        }
-        catch (FileNotFoundException e) {
+            return pif;
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

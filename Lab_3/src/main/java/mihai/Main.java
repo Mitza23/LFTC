@@ -11,6 +11,20 @@ public class Main {
 
         ProgramScanner programScanner = new ProgramScanner("src/main/resources/token.txt");
         programScanner.readTokens();
-        System.out.println(programScanner.readFile("src/main/resources/p1.txt"));
+        var pif = programScanner.readFile("src/main/resources/p3err.txt");
+        System.out.println("\tPIF");
+        for (var p : pif) {
+            System.out.println(p);
+        }
+        var ST = programScanner.getSymbolTable();
+        System.out.println("\n\n\tSYMBOL TABLE");
+        for (var p : ST) {
+            System.out.println(p);
+        }
+        var CT = programScanner.getConstantsTable();
+        System.out.println("\n\n\tCONSTANTS TABLE");
+        for (var p : CT) {
+            System.out.println(p);
+        }
     }
 }
