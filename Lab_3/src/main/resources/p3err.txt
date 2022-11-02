@@ -1,12 +1,12 @@
-int n
-read(n);
+int na
+read(an);
 int x;
 s = 0;
 int i;
 i = 0
 while(i < n) {
 	read(x);
-	s ++ x;
+	s += x;
 	i += 1;
 }
 print (s);

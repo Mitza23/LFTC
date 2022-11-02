@@ -1,3 +1,4 @@
+C:\Users\mitza\.jdks\corretto-17.0.5\bin\java.exe "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2021.3.2\lib\idea_rt.jar=62595:C:\Program Files\JetBrains\IntelliJ IDEA 2021.3.2\bin" -Dfile.encoding=UTF-8 -classpath D:\Facultate\Sem_5\LFTC\Labs\Lab_3\target\classes mihai.Main
 	PIF
 int -> -1
 id -> 0
@@ -51,14 +52,14 @@ id -> 2
 
 
 	SYMBOL TABLE
-n
-x
-s
-i
+0 -> n
+1 -> x
+2 -> s
+3 -> i
 
 
 	CONSTANTS TABLE
-0
-1
+0 -> 0
+1 -> 1
 
 Process finished with exit code 0

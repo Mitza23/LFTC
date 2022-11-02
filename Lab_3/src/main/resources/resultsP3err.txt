@@ -1,4 +1,4 @@
-Exception in thread "main" mihai.SyntaxError: Syntax error: unidentified token [++] on line 9
+Exception in thread "main" mihai.LexicalError: Syntax error: unidentified token [++] on line 9
 	at mihai.ProgramScanner.readFile(ProgramScanner.java:118)
 	at mihai.Main.main(Main.java:14)
 

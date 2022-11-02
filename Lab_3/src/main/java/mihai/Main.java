@@ -19,12 +19,12 @@ public class Main {
         var ST = programScanner.getSymbolTable();
         System.out.println("\n\n\tSYMBOL TABLE");
         for (var p : ST) {
-            System.out.println(p);
+            System.out.println(ST.indexOf(p)+ " -> " + p);
         }
         var CT = programScanner.getConstantsTable();
         System.out.println("\n\n\tCONSTANTS TABLE");
         for (var p : CT) {
-            System.out.println(p);
+            System.out.println(CT.indexOf(p)+ " -> " + p);
         }
     }
 }

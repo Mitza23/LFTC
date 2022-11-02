@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 import static mihai.Constants.CONSTANT;
 import static mihai.Constants.IDENTIFIER;
 
+
 /**
  * ProgramScanner class is used to read an input program and break it down into tokens
  */
@@ -158,7 +159,7 @@ public class ProgramScanner {
                                 int pos = addSymbol(token);
                                 pif.add(new Pair<>(IDENTIFIER, pos));
                             } else {
-                                throw new SyntaxError("Syntax error: unidentified token [" + token + "] on line " + lineCount);
+                                throw new LexicalError("Lexical error: unidentified token [" + token + "] on line " + lineCount);
                             }
                         }
                     }
