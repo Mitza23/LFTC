@@ -1,6 +1,11 @@
 package mihai;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Main {
+
     public static void main(String[] args) {
 //        String line = "int n; n = 2; if(n == 2) { }";
 //        StringTokenizer tokenizer = new StringTokenizer(line, " ;(){}[]", true);
@@ -11,20 +16,32 @@ public class Main {
 
         ProgramScanner programScanner = new ProgramScanner("src/main/resources/token.txt");
         programScanner.readTokens();
-        var pif = programScanner.readFile("src/main/resources/p3err.txt");
-        System.out.println("\tPIF");
-        for (var p : pif) {
-            System.out.println(p);
+        var pif = programScanner.readFile("src/main/resources/p3.txt");
+        File pifFile = new File("PIF.txt");
+        try (FileWriter pifWriter = new FileWriter("PIF.txt")){
+            pifWriter.write("\tPIF\n");
+            for (var p : pif) {
+               pifWriter.write(p + "\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
         var ST = programScanner.getSymbolTable();
-        System.out.println("\n\n\tSYMBOL TABLE");
-        for (var p : ST) {
-            System.out.println(ST.indexOf(p)+ " -> " + p);
-        }
-        var CT = programScanner.getConstantsTable();
-        System.out.println("\n\n\tCONSTANTS TABLE");
-        for (var p : CT) {
-            System.out.println(CT.indexOf(p)+ " -> " + p);
+
+        File stFile = new File("ST.txt");
+        try (FileWriter stWriter = new FileWriter("ST.txt")){
+            stWriter.write("\n\n\tSYMBOL TABLE\n");
+            for (var p : ST) {
+                stWriter.write(ST.indexOf(p)+ " -> " + p + "\n");
+            }
+            var CT = programScanner.getConstantsTable();
+            stWriter.write("\n\n\tCONSTANTS TABLE\n");
+            for (var p : CT) {
+                stWriter.write(CT.indexOf(p)+ " -> " + p + "\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
