@@ -57,7 +57,6 @@ public class FiniteAutomaton {
             /// Transformation
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
-                System.out.println(line);
                 tokens = line.split(" ");
                 transformations.add(new Transformation(tokens[0], tokens[1], tokens[2]));
                 states.add(tokens[0]);

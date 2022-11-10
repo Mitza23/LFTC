@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static Scanner scanner = new Scanner(System.in);
+//    public static Scanner scanner = new Scanner(System.in);
     public static FiniteAutomaton automaton = new FiniteAutomaton();
 
     public static void printMenu() {
@@ -17,6 +17,7 @@ public class Main {
     }
 
     public static void readAutomaton() {
+        Scanner scanner = new Scanner(System.in);
         String fileName = scanner.nextLine();
         automaton.readAutomaton(fileName);
     }
@@ -63,6 +64,7 @@ public class Main {
 
     public static void checkSequence() {
         System.out.print("sequence: ");
+        Scanner scanner = new Scanner(System.in);
         var word = scanner.next();
         System.out.println(automaton.checkSequence(word, automaton.getInitialStates()));
     }
@@ -71,6 +73,7 @@ public class Main {
         boolean done = false;
         while (!done) {
             printMenu();
+            Scanner scanner = new Scanner(System.in);
             int option = scanner.nextInt();
             switch (option) {
                 case 1:
