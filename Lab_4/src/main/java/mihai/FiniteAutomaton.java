@@ -11,6 +11,14 @@ public class FiniteAutomaton {
     private Set<String> initialStates;
     private Set<String> finalStates;
 
+    public FiniteAutomaton() {
+        transformations = new ArrayList<>();
+        states = new HashSet<>();
+        alphabet = new HashSet<>();
+        initialStates = new HashSet<>();
+        finalStates = new HashSet<>();
+    }
+
     public List<Transformation> getTransformations() {
         return transformations;
     }
@@ -29,14 +37,6 @@ public class FiniteAutomaton {
 
     public Set<String> getFinalStates() {
         return finalStates;
-    }
-
-    public FiniteAutomaton() {
-        transformations = new ArrayList<>();
-        states = new HashSet<>();
-        alphabet = new HashSet<>();
-        initialStates = new HashSet<>();
-        finalStates = new HashSet<>();
     }
 
     public void readAutomaton(String fileName) {
@@ -75,15 +75,20 @@ public class FiniteAutomaton {
             if (finalStates.contains(state)) {
                 return true;
             }
-            Set<String> followingStates = new HashSet<>();
-            String value = word.substring(0, 1);
-            transformations.stream()
-                    .filter(transformation -> (transformation.value.equals(value) && transformation.initialState.equals(state)))
-                    .forEach(transformation -> {
-                        followingStates.add(transformation.finalState);
-                    });
-            result = result | checkSequence(word.substring(1), followingStates);
+            if (word.length() > 0) {
+                Set<String> followingStates = new HashSet<>();
+                String value = word.substring(0, 1);
+                transformations.stream()
+                        .filter(transformation -> (transformation.value.equals(value) && transformation.initialState.equals(state)))
+                        .forEach(transformation -> {
+                            followingStates.add(transformation.finalState);
+                        });
+                result = result | checkSequence(word.substring(1), followingStates);
+                return result;
+            } else {
+                return false;
+            }
         }
-        return result;
+        return false;
     }
 }
