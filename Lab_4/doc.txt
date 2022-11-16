@@ -1,0 +1,12 @@
+File format
+<file>  ::= <initial_state> "\n" <final_states> "\n" <transitions>
+<initial_state> ::= <state>
+<final_states> ::= <state> | <final_states>" "<state>
+<transition> ::= <state>" "<alphabet>" "<state>
+<transitions> ::=  <transition> | <transitions>"\n"<transition>
+
+<state> ::= <letter> | <digit> | <state><letter> | <state><digit>
+<letter> ::= A | B | ... | Z | a | b | ... | z
+<digit> ::= 0 | <non-zero-digit>
+<non-zero-digits> ::= 1 | 2 | .. | 9
+<alphabet> ::= <letter> | <digit> | "'" | """

@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 public class Main {
 
-//    public static Scanner scanner = new Scanner(System.in);
     public static FiniteAutomaton automaton = new FiniteAutomaton();
 
+    /**
+     * Prints menu of options
+     */
     public static void printMenu() {
         System.out.println("1. Read automaton");
         System.out.println("2. Display states");
@@ -16,12 +18,18 @@ public class Main {
         System.out.println("0. exit");
     }
 
+    /**
+     * Triggers the generation of the automaton
+     */
     public static void readAutomaton() {
         Scanner scanner = new Scanner(System.in);
         String fileName = scanner.nextLine();
         automaton.readAutomaton(fileName);
     }
 
+    /**
+     * Shows initial state + final states + all intermediary states
+     */
     public static void displayStates() {
         var states = automaton.getInitialStates();
         System.out.println("Initial states");
@@ -43,6 +51,9 @@ public class Main {
         System.out.println("\n\n");
     }
 
+    /**
+     * Displays the alphabet
+     */
     public static void displayAlphabet() {
         var alphabet = automaton.getAlphabet();
         System.out.println("Alphabet:");
@@ -54,6 +65,9 @@ public class Main {
         System.out.println("\n\n");
     }
 
+    /**
+     * Show all transitions
+     */
     public static void displayTransitions() {
         var transitions = automaton.getTransformations();
         System.out.println("Transitions:");
@@ -62,6 +76,9 @@ public class Main {
         }
     }
 
+    /**
+     * Checks to see if a sequence belongs to the automaton
+     */
     public static void checkSequence() {
         System.out.print("sequence: ");
         Scanner scanner = new Scanner(System.in);
@@ -69,6 +86,11 @@ public class Main {
         System.out.println(automaton.checkSequence(word, automaton.getInitialStates()));
     }
 
+    /**
+     * Main event loop
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         boolean done = false;
         while (!done) {
