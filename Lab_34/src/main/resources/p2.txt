@@ -1,0 +1,16 @@
+int a;
+int b;
+int r;
+int ca;
+int cb;
+read(a);
+read(b);
+r = a % b;
+ca = a;
+cb = b;
+while(b != 0) {
+	a = b;
+	b = r;
+	r = a % b;
+}
+print(a);

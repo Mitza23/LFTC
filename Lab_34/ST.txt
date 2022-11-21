@@ -1,0 +1,12 @@
+
+
+	SYMBOL TABLE
+0 -> n
+1 -> x
+2 -> s
+3 -> i
+
+
+	CONSTANTS TABLE
+0 -> 0
+1 -> 1
