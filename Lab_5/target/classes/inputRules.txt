@@ -10,5 +10,6 @@
 
 <startingsymbol-decl> ::= <nonterminal>
 
-<productions-decl> ::= <production> | <productions-decl>”\n” <production> <production> ::= <nonterminal> <values-list>
-<values-list> = <nonterminal> | <value> | <values-list><nonterminal> | <values-list><value>
+<productions-decl> ::= <production> | <productions-decl>”\n” <production>
+<production> ::= "["<nonterminal>"]~"<values-list>
+<values-list> = "["<nonterminal>"]" | <value> | <values-list>"["<nonterminal>"]" | <values-list><value>
