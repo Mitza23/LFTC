@@ -1,11 +1,13 @@
 package mihai;
 
+import java.util.List;
+
 public class Production {
-    String left;
-    String right;
+    Value left;
+    List<Value> right;
     String name;
 
-    public Production(String left, String right, String name) {
+    public Production(Value left, List<Value> right, String name) {
         this.left = left;
         this.right = right;
         this.name = name;
@@ -13,6 +15,10 @@ public class Production {
 
     @Override
     public String toString() {
-        return left + " -> " + right + " (" + name + ")";
+        StringBuilder sb = new StringBuilder();
+        for(var e : right){
+            sb.append(e);
+        }
+        return left + " -> " + sb.toString() + " (" + name + ")";
     }
 }
