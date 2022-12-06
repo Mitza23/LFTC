@@ -51,7 +51,6 @@ public class GrammarReader {
                 tokens = line.split("~");
                 List<Value> value = findValues(tokens[0]);
                 if(value.size() != 1 || value.get(0).isTerminal()){
-                    System.out.println(findValues(tokens[0]));
                     throw new RuntimeException("Not CFG!");
                 }
                 productions.add(new Production(value.get(0), findValues(tokens[1]), generateName(productions, value.get(0).getValue())));
@@ -75,7 +74,6 @@ public class GrammarReader {
             } else if("]".equals(sb.substring(0,1))) {
                 if(!aux.isEmpty()){
                     result.add(new Value(aux.toString(),false)); 
-                    System.out.println(aux.toString());
                 }
                 aux = new StringBuilder();
             } else {

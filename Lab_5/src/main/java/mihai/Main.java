@@ -21,8 +21,9 @@ public class Main {
                         System.out.println(grammarReader.getTerminals());
                         break;
                     case 3:
-                    grammarReader.getProductions().stream().forEach(v -> System.out.println(v));;
-                    break;
+                        grammarReader.getProductions()
+                                .stream().forEach(v -> System.out.println(v));;
+                        break;
                     case 4:
                         Scanner scanner2 = new Scanner(System.in);
                         String nonTerminal = scanner2.next();

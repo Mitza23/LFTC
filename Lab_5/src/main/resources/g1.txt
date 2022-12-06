@@ -1,7 +1,7 @@
 A B
 a b
 A
-{A}~a
-{A}~b
-{A}~{B}b
-{B}~{A}a
+[A]~a
+[A]~b
+[A]~[B]b
+[B]~[A]a
