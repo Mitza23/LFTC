@@ -1,7 +1,6 @@
 package mihai;
 
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,12 +31,25 @@ public class Main {
                         grammarReader.getProductionsForNonTerminal(nonTerminal).forEach(System.out::println);
                         break;
                     case 5:
-                        parser.computeFirstIteration(new HashMap<>());
+                        parser.computeFirst();
                         for(var key: parser.firstTable.keySet()) {
-                            System.out.println(key + ": ");
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(key).append(": ");
                             for(var value: parser.firstTable.get(key)) {
-                                System.out.println("\t" + value);
+                                sb.append("\t").append(value);
                             }
+                            System.out.println(sb);
+                        }
+                        break;
+                    case 6:
+                        parser.computeFollow();
+                        for(var key: parser.followTable.keySet()) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(key).append(": ");
+                            for(var value: parser.followTable.get(key)) {
+                                sb.append("\t").append(value);
+                            }
+                            System.out.println(sb);
                         }
                         break;
                     case 0:
@@ -56,6 +68,7 @@ public class Main {
         System.out.println("3. Set of productions");
         System.out.println("4. Production for terminal");
         System.out.println("5. FIRST");
+        System.out.println("6. FOLLOW");
         System.out.println("0. Exit");
     }
 }

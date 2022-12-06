@@ -1,5 +1,5 @@
 assign-statement constant special-statement input-output-statement simple-statement for-each-statement sign program type boolean-constant compound-statement relation non-zero-number array-declaration statement term factor digit identifier expression if-statement type1 declaration while-statement condition non-zero-digit declaration-list integer-constant letter
-! % ( ) * + - / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z { }
+! % ( ) * + - / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z { } $
 program
 [program]~[declaration-list]; [compound-statement]
 [declaration-list]~[declaration]
@@ -26,7 +26,7 @@ program
 [term]~[factor]
 [factor]~([expression])
 [factor]~[identifier]
-[factor]~[constant}
+[factor]~[constant]
 [input-output-statement]~READ [identifier]
 [input-output-statement]~PRINT [identifier]
 [input-output-statement]~PRINT [constant]
@@ -114,12 +114,12 @@ program
 [letter]~z
 [digit]~0
 [digit]~[non-zero-digit]
-[non-zero-digits]~1
-[non-zero-digits]~2
-[non-zero-digits]~3
-[non-zero-digits]~4
-[non-zero-digits]~5
-[non-zero-digits]~6
-[non-zero-digits]~7
-[non-zero-digits]~8
-[non-zero-digits]~9
+[non-zero-digit]~1
+[non-zero-digit]~2
+[non-zero-digit]~3
+[non-zero-digit]~4
+[non-zero-digit]~5
+[non-zero-digit]~6
+[non-zero-digit]~7
+[non-zero-digit]~8
+[non-zero-digit]~9

@@ -6,6 +6,7 @@ public class Parser {
     GrammarReader grammarReader;
 
     HashMap<String, Set<String>> firstTable = new HashMap<>();
+    HashMap<String, Set<String>> followTable = new HashMap<>();
 
 //    Value epsilon = new Value("$", true);
 
@@ -20,69 +21,148 @@ public class Parser {
         int index = 0;
         boolean done = false;
         while (!done && index < list.size()) {
-            for(var v: list.get(index)) {
-                if(!epsilon.equals(v)){
-                    result.add(v);
+            if (list.get(index) != null) {
+                for (var v : list.get(index)) {
+                    if (!epsilon.equals(v)) {
+                        result.add(v);
+                    }
+                }
+                if (list.get(index).contains(epsilon)) {
+                    index += 1;
+                } else {
+                    done = true;
                 }
             }
-            if (list.get(index).contains(epsilon)) {
-                index += 1;
-            } else {
-                done = true;
-            }
+
         }
         return result;
     }
 
-    public void computeFirstIteration(HashMap<String, Set<String>> previous) {
-        HashMap<String, Set<String>> current = new HashMap<>();
-        for (var nonTerminal : grammarReader.getNonTerminals()) {
-            current.put(nonTerminal, new HashSet<>());
-        }
-        for (var nonTerminal : grammarReader.getNonTerminals()) {
-            var terminalList = current.get(nonTerminal);
-            var productions = grammarReader.getProductionsForNonTerminal(nonTerminal);
-            for (var production : productions) {
-                var value = production.right.get(0);
-                if (value.isTerminal()) {
-                    terminalList.add(production.right.get(0).getValue());
-                } else {
-                    // is NON TERMINAL
-                    List<Set<String>> setList = new ArrayList<>();
-                    for (var rightValue : production.right) {
-                        if (rightValue.isTerminal()) {
-                            Set<String> toAdd = new HashSet<>();
-                            toAdd.add(rightValue.getValue());
-                            setList.add(toAdd);
-                        }
-                        else {
-                            var previousList = previous.get(rightValue.getValue());
-                            setList.add(previousList);
-                        }
-                    }
-                    current.put(value.getValue(), concatenateLengthOne(setList));
-                }
-            }
-        }
-        // compare CURRENT with PREVIOUS
+    public boolean areStatesEqual(HashMap<String, Set<String>> state1, HashMap<String, Set<String>> state2) {
         boolean match = true;
-        for (var key: previous.keySet()) {
-            if (!current.containsKey(key)) {
+        for (var key : state1.keySet()) {
+            if (!state2.containsKey(key)) {
                 match = false;
                 break;
             }
-                for(var value: previous.get(key)) {
-                    if(!current.get(key).contains(value)) {
-                        match = false;
-                        break;
+            for (var value : state1.get(key)) {
+                if (!state2.get(key).contains(value)) {
+                    match = false;
+                    break;
+                }
+            }
+        }
+        for (var key : state2.keySet()) {
+            if (!state1.containsKey(key)) {
+                match = false;
+                break;
+            }
+            for (var value : state2.get(key)) {
+                if (!state1.get(key).contains(value)) {
+                    match = false;
+                    break;
+                }
+            }
+        }
+        return match;
+    }
+
+    public void computeFirst() {
+        HashMap<String, Set<String>> previous = new HashMap<>();
+        for (var v : grammarReader.getNonTerminals()) {
+            previous.put(v, new HashSet<>());
+        }
+
+        HashMap<String, Set<String>> current = new HashMap<>();
+
+        boolean done = false;
+        while (!done) {
+            for (var nonTerminal : grammarReader.getNonTerminals()) {
+                current.put(nonTerminal, new HashSet<>());
+            }
+            for (var nonTerminal : grammarReader.getNonTerminals()) {
+                var productions = grammarReader.getProductionsForNonTerminal(nonTerminal);
+                for (var production : productions) {
+                    var value = production.right.get(0);
+                    if (value.isTerminal()) {
+                        current.get(nonTerminal).add(production.right.get(0).getValue());
+                    } else {
+                        List<Set<String>> setList = new ArrayList<>();
+                        for (var rightValue : production.right) {
+                            if (rightValue.isTerminal()) {
+                                Set<String> toAdd = new HashSet<>();
+                                toAdd.add(rightValue.getValue());
+                                setList.add(toAdd);
+                            } else {
+                                var previousList = previous.get(rightValue.getValue());
+                                if (previousList != null)
+                                    setList.add(previousList);
+                            }
+                        }
+                        current.get(nonTerminal).addAll(concatenateLengthOne(setList));
                     }
                 }
-        }
-        if(!match) {
-            computeFirstIteration(current);
-        }
-        else {
+            }
             firstTable = current;
+            if (areStatesEqual(previous, current)) {
+                done = true;
+            } else {
+                previous = current;
+                current = new HashMap<>();
+            }
+        }
+    }
+
+    public void computeFollow() {
+        HashMap<String, Set<String>> previous = new HashMap<>();
+        for (var v : grammarReader.getNonTerminals()) {
+            if (v.equals(grammarReader.getStartingSymbol())) {
+                Set<String> auxSet = new HashSet<>();
+                auxSet.add("$");
+                previous.put(v, auxSet);
+            }
+            previous.put(v, new HashSet<>());
+        }
+
+        HashMap<String, Set<String>> current = new HashMap<>();
+
+        boolean done = false;
+        while (!done) {
+            for (var previousValue : previous.keySet()) {
+                current.put(previousValue, previous.get(previousValue));
+            }
+            for (var nonTerminal : grammarReader.getNonTerminals()) {
+                var valueToMatch = new Value(nonTerminal, false);
+                var productions = grammarReader.getProductions().stream().filter(v -> v.right.contains(valueToMatch)).toList();
+                for (var production : productions) {
+                    Value value = null;
+                    int index = 0;
+                    while (value != valueToMatch && index < production.right.size()) {
+                        value = production.right.get(index);
+                        index++;
+                    }
+                    if (value == valueToMatch) {
+                        //epsilon
+                        current.get(nonTerminal).add("$");
+                    } else if (value.isTerminal()) {
+                        //terminal
+                        current.get(nonTerminal).add(value.getValue());
+                    } else {
+                        //non-terminal
+                        if (firstTable.get(value.getValue()) != null && firstTable.get(value.getValue()).contains("$")) {
+                            current.get(nonTerminal).addAll(previous.get(production.left.getValue()));
+                        }
+                        current.get(nonTerminal).addAll(firstTable.get(value.getValue()).stream().filter(v -> !"$".equals(v)).toList());
+                    }
+                }
+            }
+            followTable = current;
+            if (areStatesEqual(previous, current)) {
+                done = true;
+            } else {
+                previous = current;
+                current = new HashMap<>();
+            }
         }
     }
 }

@@ -1,7 +1,8 @@
-A B
-a b
+A B C
+a b 2 3
 A
 [A]~a
 [A]~b
 [A]~[B]b
-[B]~[A]a
+[B]~[A][C]a
+[C]~2[A]3
