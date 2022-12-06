@@ -3,6 +3,7 @@ package mihai;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GrammarReader {
 
@@ -62,27 +63,33 @@ public class GrammarReader {
     }
 
     private List<Value> findValues(String string) {
+        boolean isTerminal = true;
         List<Value> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder(string);
         StringBuilder aux = new StringBuilder();
+
         while (sb.length() > 0) {
             if ("[".equals(sb.substring(0, 1))) {
-                if(!aux.isEmpty()){
-                   result.add(new Value(aux.toString(), true)); 
-                }
+                isTerminal = false;
+//                if(!aux.isEmpty()){
+//                   result.add(new Value(aux.toString(), true));
+//                }
                 aux = new StringBuilder();
             } else if("]".equals(sb.substring(0,1))) {
+                isTerminal = true;
                 if(!aux.isEmpty()){
-                    result.add(new Value(aux.toString(),false)); 
+                    result.add(new Value(aux.toString(),false));
+                    aux = new StringBuilder();
                 }
-                aux = new StringBuilder();
             } else {
-                aux.append(sb.substring(0, 1));
+                if(isTerminal){
+                    result.add(new Value(sb.substring(0, 1), true));
+                }
+                else {
+                    aux.append(sb.substring(0, 1));
+                }
             }
             sb = new StringBuilder(sb.substring(1));
-        }
-        if(!aux.isEmpty()){
-            result.add(new Value(aux.toString(), true)); 
         }
         return result;
     }
@@ -90,5 +97,9 @@ public class GrammarReader {
     private String generateName(List<Production> productions, String token) {
         long count = productions.stream().filter(v -> Objects.equals(v.left.getValue(), token)).count();
         return token + (count + 1);
+    }
+
+    public List<Production> getProductionsForNonTerminal(String nonTerminal) {
+        return getProductions().stream().filter(v -> v.left.getValue().equals(nonTerminal)).collect(Collectors.toList());
     }
 }

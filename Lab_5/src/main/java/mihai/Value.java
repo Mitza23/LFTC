@@ -1,5 +1,7 @@
 package mihai;
 
+import java.util.Objects;
+
 public class Value{
     private String value;
     private boolean isTerminal;
@@ -24,5 +26,17 @@ public class Value{
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Value value1)) return false;
+        return isTerminal == value1.isTerminal && Objects.equals(value, value1.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, isTerminal);
     }
 }

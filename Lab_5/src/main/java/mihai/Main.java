@@ -1,11 +1,13 @@
 package mihai;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         GrammarReader grammarReader = new GrammarReader();
         grammarReader.readGrammar("src/main/resources/g2.txt");
+        Parser parser = new Parser(grammarReader);
 
         try (Scanner scanner = new Scanner(System.in)) {
             boolean done = false;
@@ -27,9 +29,18 @@ public class Main {
                     case 4:
                         Scanner scanner2 = new Scanner(System.in);
                         String nonTerminal = scanner2.next();
-                        grammarReader.getProductions().stream().filter(v -> v.left.getValue().equals(nonTerminal)).forEach(v -> System.out.println(v));;
+                        grammarReader.getProductionsForNonTerminal(nonTerminal).forEach(System.out::println);
                         break;
                     case 5:
+                        parser.computeFirstIteration(new HashMap<>());
+                        for(var key: parser.firstTable.keySet()) {
+                            System.out.println(key + ": ");
+                            for(var value: parser.firstTable.get(key)) {
+                                System.out.println("\t" + value);
+                            }
+                        }
+                        break;
+                    case 0:
                         done = true;
                         break;
                     default:
@@ -44,6 +55,7 @@ public class Main {
         System.out.println("2. Set of terminals");
         System.out.println("3. Set of productions");
         System.out.println("4. Production for terminal");
-        System.out.println("5. Exit");
+        System.out.println("5. FIRST");
+        System.out.println("0. Exit");
     }
 }

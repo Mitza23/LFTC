@@ -1,5 +1,5 @@
 assign-statement constant special-statement input-output-statement simple-statement for-each-statement sign program type boolean-constant compound-statement relation non-zero-number array-declaration statement term factor digit identifier expression if-statement type1 declaration while-statement condition non-zero-digit declaration-list integer-constant letter
-! % ( ) * + - / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z { }
+! % ( ) * + - / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z { } $
 program
 [program]~[declaration-list]; [compound-statement]
 [declaration-list]~[declaration]
