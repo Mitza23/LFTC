@@ -135,11 +135,14 @@ public class Parser {
                 var valueToMatch = new Value(nonTerminal, false);
                 var productions = grammarReader.getProductions().stream().filter(v -> v.right.contains(valueToMatch)).toList();
                 for (var production : productions) {
-                    Value value = null;
+                    Value value = new Value("");
                     int index = 0;
-                    while (value != valueToMatch && index < production.right.size()) {
+                    while (!value.getValue().equals(valueToMatch.getValue()) && index < production.right.size()) {
                         value = production.right.get(index);
                         index++;
+                    }
+                    if(index<production.right.size()) {
+                        value = production.right.get(index);
                     }
                     if (value == valueToMatch) {
                         //epsilon

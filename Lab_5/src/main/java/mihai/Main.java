@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         GrammarReader grammarReader = new GrammarReader();
-        grammarReader.readGrammar("src/main/resources/g2.txt");
+        grammarReader.readGrammar("src/main/resources/g1.txt");
         Parser parser = new Parser(grammarReader);
 
         try (Scanner scanner = new Scanner(System.in)) {
