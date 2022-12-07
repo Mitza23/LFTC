@@ -120,8 +120,9 @@ public class Parser {
                 Set<String> auxSet = new HashSet<>();
                 auxSet.add("$");
                 previous.put(v, auxSet);
+            } else {
+                previous.put(v, new HashSet<>());
             }
-            previous.put(v, new HashSet<>());
         }
 
         HashMap<String, Set<String>> current = new HashMap<>();
@@ -129,7 +130,11 @@ public class Parser {
         boolean done = false;
         while (!done) {
             for (var previousValue : previous.keySet()) {
-                current.put(previousValue, previous.get(previousValue));
+                HashSet<String> auxSet = new HashSet<>();
+                for(var prevValue : previous.get(previousValue)) {
+                    auxSet.add(prevValue);
+                }
+                current.put(previousValue, auxSet);
             }
             for (var nonTerminal : grammarReader.getNonTerminals()) {
                 var valueToMatch = new Value(nonTerminal, false);
@@ -141,22 +146,20 @@ public class Parser {
                         value = production.right.get(index);
                         index++;
                     }
-                    if(index<production.right.size()) {
+                    if (index < production.right.size()) {
                         value = production.right.get(index);
                     }
-                    if (value == valueToMatch) {
+                    if (value.equals(valueToMatch)) {
                         //epsilon
                         current.get(nonTerminal).add("$");
                     } else if (value.isTerminal()) {
                         //terminal
                         current.get(nonTerminal).add(value.getValue());
                     } else {
-                        //non-terminal
-                        if (firstTable.get(value.getValue()) != null && firstTable.get(value.getValue()).contains("$")) {
-                            current.get(nonTerminal).addAll(previous.get(production.left.getValue()));
-                        }
-                        current.get(nonTerminal).addAll(firstTable.get(value.getValue()).stream().filter(v -> !"$".equals(v)).toList());
+                        current.get(nonTerminal).addAll(previous.get(production.left.getValue()));
+                        current.get(nonTerminal).addAll(firstTable.get(value.getValue()));
                     }
+
                 }
             }
             followTable = current;
