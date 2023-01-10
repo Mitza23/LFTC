@@ -1,0 +1,24 @@
+%option noyywrap
+
+identifier [a-zA-Z]+[a-zA-Z0-9]*
+constant  \"[a-zA-Z0-9]+\"|\'[a-zA-Z0-9]\'|[0-9]|[1-9][0-9]*
+
+%%
+
+"int"|"char"|"="|"=="|"!="|"-="|"+="|"/="|"+"|"-"|"*"|"/"|"%"|"<"|">"|"<="|">="|"if"|"else"|"for"|"while"|"print"|"read"|"("|")"|"["|"]"|"{"|"}"|";" printf("A reserved word %s\n", yytext);
+
+{identifier} printf("An identifier: %s\n", yytext);
+{constant} printf("A constant: %s\n", yytext);
+
+"//"[^}\n]*
+
+[ \t\n]+
+
+. printf("Error: < %s >\n", yytext);
+
+%%
+
+int main (int argc, char** argv) {
+  yyin = stdin;
+  yylex();
+}
