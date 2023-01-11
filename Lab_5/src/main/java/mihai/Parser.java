@@ -196,5 +196,38 @@ public class Parser {
                 }
             }
         }
+        System.out.println("alsjdbakjsbdjk");
+    }
+
+    public String parse(String input){
+        String inputStack = input + "$";
+        Stack<Value> workingStack = new Stack<>();
+        workingStack.add(new Value(grammarReader.getStartingSymbol(), false));
+        String output = "";
+
+        while(true){
+            if(inputStack.equals("$") && workingStack.isEmpty()) {
+                return output;
+            }
+            if(!inputStack.equals("$") && workingStack.isEmpty()) {
+                return null;
+            }
+            String nextToVerify = inputStack.substring(0,1);
+            Value nextToVerifyValue = workingStack.pop();
+            if(nextToVerifyValue.isTerminal() && nextToVerify.equals(nextToVerifyValue.getValue())){
+                inputStack = inputStack.substring(1);
+            }
+            else if(!nextToVerifyValue.isTerminal()){
+                var productionName = parsingTable.get(nextToVerifyValue).get(new Value(nextToVerify, true));
+                Production production = grammarReader.getProductionByName(productionName);
+                List<Value> auxList = new ArrayList<>(List.copyOf(production.right));
+                Collections.reverse(auxList);
+                for(var val : auxList){
+                    if(!val.equals(epsilon))
+                        workingStack.add(val);
+                }
+                output += productionName + " ";
+            }
+        }
     }
 }

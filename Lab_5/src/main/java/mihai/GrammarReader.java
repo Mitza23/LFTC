@@ -102,4 +102,13 @@ public class GrammarReader {
     public List<Production> getProductionsForNonTerminal(String nonTerminal) {
         return getProductions().stream().filter(v -> v.left.getValue().equals(nonTerminal)).collect(Collectors.toList());
     }
+
+    public Production getProductionByName(String name){
+        for(var p : productions){
+            if(p.name.equals(name)){
+                return p;
+            }
+        }
+        return null;
+    }
 }

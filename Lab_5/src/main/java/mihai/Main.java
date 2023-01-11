@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         GrammarReader grammarReader = new GrammarReader();
-        grammarReader.readGrammar("src/main/resources/g1.txt");
+        grammarReader.readGrammar("src/main/resources/g2.txt");
         Parser parser = new Parser(grammarReader);
 
         try (Scanner scanner = new Scanner(System.in)) {
@@ -61,6 +61,7 @@ public class Main {
                             }
                         }
                         System.out.println(sb);
+                        System.out.println(parser.parse("a*(a+a)"));
                         break;
                     case 0:
                         done = true;
