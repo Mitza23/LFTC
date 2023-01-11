@@ -1,23 +1,26 @@
 package mihai;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Parser {
     GrammarReader grammarReader;
 
-    HashMap<String, Set<String>> firstTable = new HashMap<>();
-    HashMap<String, Set<String>> followTable = new HashMap<>();
+    Map<Value, Map<Value, String>> parsingTable = new HashMap<>();
 
-//    Value epsilon = new Value("$", true);
+    HashMap<Value, Set<Value>> firstTable = new HashMap<>();
+    HashMap<Value, Set<Value>> followTable = new HashMap<>();
 
-    String epsilon = "$";
+    Value epsilon = new Value("$", true);
+
+//    String epsilon = "$";
 
     public Parser(GrammarReader grammarReader) {
         this.grammarReader = grammarReader;
     }
 
-    public Set<String> concatenateLengthOne(List<Set<String>> list) {
-        var result = new HashSet<String>();
+    public Set<Value> concatenateLengthOne(List<Set<Value>> list) {
+        var result = new HashSet<Value>();
         int index = 0;
         boolean done = false;
         while (!done && index < list.size()) {
@@ -38,7 +41,7 @@ public class Parser {
         return result;
     }
 
-    public boolean areStatesEqual(HashMap<String, Set<String>> state1, HashMap<String, Set<String>> state2) {
+    public boolean areStatesEqual(HashMap<Value, Set<Value>> state1, HashMap<Value, Set<Value>> state2) {
         boolean match = true;
         for (var key : state1.keySet()) {
             if (!state2.containsKey(key)) {
@@ -67,39 +70,49 @@ public class Parser {
         return match;
     }
 
+    public Set<Value> computeFirstForValue(Value value) {
+        var auxSet = new HashSet<Value>();
+        if (value.isTerminal()) {
+            auxSet.add(value);
+        } else {
+            auxSet.addAll(firstTable.get(value));
+        }
+        return auxSet;
+    }
+
     public void computeFirst() {
-        HashMap<String, Set<String>> previous = new HashMap<>();
+        HashMap<Value, Set<Value>> previous = new HashMap<>();
         for (var v : grammarReader.getNonTerminals()) {
-            previous.put(v, new HashSet<>());
+            previous.put(new Value(v, false), new HashSet<>());
         }
 
-        HashMap<String, Set<String>> current = new HashMap<>();
+        HashMap<Value, Set<Value>> current = new HashMap<>();
 
         boolean done = false;
         while (!done) {
             for (var nonTerminal : grammarReader.getNonTerminals()) {
-                current.put(nonTerminal, new HashSet<>());
+                current.put(new Value(nonTerminal, false), new HashSet<>());
             }
             for (var nonTerminal : grammarReader.getNonTerminals()) {
                 var productions = grammarReader.getProductionsForNonTerminal(nonTerminal);
                 for (var production : productions) {
                     var value = production.right.get(0);
                     if (value.isTerminal()) {
-                        current.get(nonTerminal).add(production.right.get(0).getValue());
+                        current.get(new Value(nonTerminal, false)).add(production.right.get(0));
                     } else {
-                        List<Set<String>> setList = new ArrayList<>();
+                        List<Set<Value>> setList = new ArrayList<>();
                         for (var rightValue : production.right) {
                             if (rightValue.isTerminal()) {
-                                Set<String> toAdd = new HashSet<>();
-                                toAdd.add(rightValue.getValue());
+                                Set<Value> toAdd = new HashSet<>();
+                                toAdd.add(rightValue);
                                 setList.add(toAdd);
                             } else {
-                                var previousList = previous.get(rightValue.getValue());
+                                var previousList = previous.get(rightValue);
                                 if (previousList != null)
                                     setList.add(previousList);
                             }
                         }
-                        current.get(nonTerminal).addAll(concatenateLengthOne(setList));
+                        current.get(new Value(nonTerminal, false)).addAll(concatenateLengthOne(setList));
                     }
                 }
             }
@@ -113,61 +126,74 @@ public class Parser {
         }
     }
 
-    public void computeFollow() {
-        HashMap<String, Set<String>> previous = new HashMap<>();
-        for (var v : grammarReader.getNonTerminals()) {
-            if (v.equals(grammarReader.getStartingSymbol())) {
-                Set<String> auxSet = new HashSet<>();
-                auxSet.add("$");
-                previous.put(v, auxSet);
+    public Set<Value> computeFollowForValue(Value v) {
+        var auxSet = new HashSet<Value>();
+        if (grammarReader.getStartingSymbol().equals(v.getValue())) {
+            auxSet.add(epsilon);
+        }
+        var productions = grammarReader.getProductions().stream().filter(v1 -> v1.right.contains(v)).toList();
+        for (var production : productions) {
+            Value value = new Value("");
+            int index = 0;
+            while (!value.getValue().equals(v.getValue()) && index < production.right.size()) {
+                value = production.right.get(index);
+                index++;
+            }
+            if (index < production.right.size()) {
+                value = production.right.get(index);
+            }
+            if (value.equals(v)) {
+                //epsilon
+                if (!production.left.equals(value)) {
+                    auxSet.addAll(computeFollowForValue(production.left));
+                }
+            } else if (value.isTerminal()) {
+                //terminal
+                auxSet.addAll(computeFirstForValue(value));
             } else {
-                previous.put(v, new HashSet<>());
+                if (!computeFirstForValue(value).contains(epsilon)) {
+                    auxSet.addAll(computeFirstForValue(value));
+                } else {
+                    auxSet.addAll(computeFirstForValue(value).stream().filter(v1 -> !v1.equals(epsilon)).collect(Collectors.toSet()));
+                    auxSet.addAll(computeFollowForValue(production.left));
+                }
             }
         }
+        return auxSet;
+    }
 
-        HashMap<String, Set<String>> current = new HashMap<>();
-
-        boolean done = false;
-        while (!done) {
-            for (var previousValue : previous.keySet()) {
-                HashSet<String> auxSet = new HashSet<>();
-                for(var prevValue : previous.get(previousValue)) {
-                    auxSet.add(prevValue);
-                }
-                current.put(previousValue, auxSet);
-            }
-            for (var nonTerminal : grammarReader.getNonTerminals()) {
-                var valueToMatch = new Value(nonTerminal, false);
-                var productions = grammarReader.getProductions().stream().filter(v -> v.right.contains(valueToMatch)).toList();
-                for (var production : productions) {
-                    Value value = new Value("");
-                    int index = 0;
-                    while (!value.getValue().equals(valueToMatch.getValue()) && index < production.right.size()) {
-                        value = production.right.get(index);
-                        index++;
-                    }
-                    if (index < production.right.size()) {
-                        value = production.right.get(index);
-                    }
-                    if (value.equals(valueToMatch)) {
-                        //epsilon
-                        current.get(nonTerminal).add("$");
-                    } else if (value.isTerminal()) {
-                        //terminal
-                        current.get(nonTerminal).add(value.getValue());
+    public void computeFollow() {
+        for (var nonTerminal : grammarReader.getNonTerminals()) {
+            followTable.put(new Value(nonTerminal, false), computeFollowForValue(new Value(nonTerminal, false)));
+        }
+    }
+    void computeParsingTable() {
+        for (var nonTerminal : grammarReader.getNonTerminals()) {
+            parsingTable.put(new Value(nonTerminal, false), new HashMap<>());
+        }
+        for (var production : grammarReader.getProductions()) {
+            boolean containsEpsilon = false;
+            for (var first : computeFirstForValue(production.right.get(0))) {
+                if (epsilon.equals(first)) {
+                    containsEpsilon = true;
+                } else {
+                    var a = parsingTable.get(production.left).get(first);
+                    if (a == null || a.isEmpty()) {
+                        parsingTable.get(production.left).put(first, production.name);
                     } else {
-                        current.get(nonTerminal).addAll(previous.get(production.left.getValue()));
-                        current.get(nonTerminal).addAll(firstTable.get(value.getValue()));
+                        throw new RuntimeException("Conflict " + production.left + " " + first);
                     }
-
                 }
             }
-            followTable = current;
-            if (areStatesEqual(previous, current)) {
-                done = true;
-            } else {
-                previous = current;
-                current = new HashMap<>();
+            if (containsEpsilon) {
+                for (var follow : computeFollowForValue(production.left)) {
+                    var a = parsingTable.get(production.left).get(follow);
+                    if (a == null || a.isEmpty()) {
+                        parsingTable.get(production.left).put(follow, production.name);
+                    } else {
+                        throw new RuntimeException("Conflict " + production.left + " " + follow);
+                    }
+                }
             }
         }
     }

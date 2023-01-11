@@ -52,6 +52,16 @@ public class Main {
                             System.out.println(sb);
                         }
                         break;
+                    case 7:
+                        parser.computeParsingTable();
+                        StringBuilder sb = new StringBuilder();
+                        for(var key: parser.parsingTable.keySet()) {
+                            for(var key2: parser.parsingTable.get(key).keySet()) {
+                                sb.append(key).append(", ").append(key2).append(" ").append(parser.parsingTable.get(key).get(key2)).append("\n");
+                            }
+                        }
+                        System.out.println(sb);
+                        break;
                     case 0:
                         done = true;
                         break;
@@ -69,6 +79,7 @@ public class Main {
         System.out.println("4. Production for terminal");
         System.out.println("5. FIRST");
         System.out.println("6. FOLLOW");
+        System.out.println("7. PARSE");
         System.out.println("0. Exit");
     }
 }
