@@ -1,0 +1,26 @@
+MAIN
+{
+int a;
+int 
+int b;
+int c;
+int max;
+
+read(a);
+read(b);
+read(c);
+
+if(a>b AND a>c){
+    max=a;
+}
+else{
+    if(b>c AND b>a){
+        max=b;
+    }
+    else{
+        max=c;
+    }
+}
+
+print(max);
+}

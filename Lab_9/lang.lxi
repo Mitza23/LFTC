@@ -1,0 +1,63 @@
+%option noyywrap
+%{ 	 
+#include <stdio.h>
+#include <string.h>
+#include "lang.tab.h"
+int lines = 0;
+%} 
+
+DIGIT 		[0-9]
+WORD		\"[a-zA-Z0-9_]*\"
+INTEGER		[+-]?[1-9][0-9]*
+CHARACTER 	\'[a-zA-Z0-9_]\'
+CONSTANT	{WORD}|{INTEGER}|{CHARACTER}|{DIGIT}
+IDENIFIER	[a-zA-Z][a-zA-Z0-9_]*
+
+
+%% 
+read        {printf( "Reserved word: %s\n", yytext); return READ;}
+print	    {printf( "Reserved word: %s\n", yytext); return WRITE;}
+if	        {printf( "Reserved word: %s\n", yytext); return IF;}
+else	    {printf( "Reserved word: %s\n", yytext); return ELSE;}
+for	        {printf( "Reserved word: %s\n", yytext); return FOR;}
+while	    {printf( "Reserved word: %s\n", yytext); return WHILE;}
+int	        {printf( "Reserved word: %s\n", yytext); return INT;}
+char        {printf( "Reserved word: %s\n", yytext); return CHAR;}
+
+
+MAIN        {printf( "Reserved word: %s\n", yytext); return START;}
+
+{IDENIFIER}	    {printf( "Identifier: %s\n", yytext); return IDENTIFIER;}
+{CONSTANT}	    {printf( "Constant: %s\n", yytext ); return CONSTANT;}
+
+";"	    {printf( "Separator: %s\n", yytext ); return SEMI_COLON;}
+","	    {printf( "Separator: %s\n", yytext ); return COMMA;}
+"{"	    {printf( "Separator: %s\n", yytext ); return OPEN_CURLY_BRACKET;}
+"}"	    {printf( "Separator: %s\n", yytext ); return CLOSED_CURLY_BRACKET;}
+"("	    {printf( "Separator: %s\n", yytext ); return OPEN_ROUND_BRACKET;}
+")"	    {printf( "Separator: %s\n", yytext ); return CLOSED_ROUND_BRACKET;}
+"["	    {printf( "Separator: %s\n", yytext ); return OPEN_RIGHT_BRACKET;}
+"]"	    {printf( "Separator: %s\n", yytext ); return CLOSED_RIGHT_BRACKET;}
+"+"	    {printf( "Operator: %s\n", yytext ); return ADD;}
+"+="	    {printf( "Operator: %s\n", yytext ); return ADDEQ;}
+"-"	    {printf( "Operator: %s\n", yytext ); return SUB;}
+"-="	    {printf( "Operator: %s\n", yytext ); return SUBEQ;}
+"*"	    {printf( "Operator: %s\n", yytext ); return MUL;}
+"/"	    {printf( "Operator: %s\n", yytext ); return DIV;}
+"/="	    {printf( "Operator: %s\n", yytext ); return DIVEQ;}
+"%"	    {printf( "Operator: %s\n", yytext ); return MOD;}
+"<"	    {printf( "Operator: %s\n", yytext ); return LT;}
+"<="	{printf( "Operator: %s\n", yytext ); return LE;}
+">"	    {printf( "Operator: %s\n", yytext ); return GT;}
+">="	{printf( "Operator: %s\n", yytext ); return GE;}
+"!="	{printf( "Operator: %s\n", yytext ); return NE;}
+"=="	{printf( "Operator: %s\n", yytext ); return EQ;}
+"="	    {printf( "Separator: %s\n", yytext ); return ASIGN;}
+
+[ \t]+  {}
+[\r\n]+   {lines++;}
+
+[+-]?0[0-9]*                    {printf("Illegal integer at line %d\n", lines); return -1;}
+[0-9]+[a-zA-Z_]+[a-zA-Z0-9_]*   {printf("Illegal identifier %d\n", lines); return -1;}
+\'[a-zA-Z0-9]{2,}\'             {printf("Character of length >=2 at line %d\n", lines); return -1;}
+.                               {printf("Lexical error\n"); return -1;}

@@ -1,0 +1,5 @@
+(check lab8 for flex if you didn't and do the steps from there)
+1. Change GnuWin32 to not be on Program Files, since if the path contains whitespaces it will not allow it.
+2. Re-edit path on System environment variables, then restart
+3. Delete the function from .lxi
+4. Do the commands from commands.txt

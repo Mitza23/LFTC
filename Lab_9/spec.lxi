@@ -12,7 +12,7 @@ constant  \"[a-zA-Z0-9]+\"|\'[a-zA-Z0-9]\'|[0-9]|[1-9][0-9]*
 
 "//"[^}\n]*
 
-[ \t\n]+
+[ \t\n\r]+
 
 . printf("Error: %s\n", yytext);
 
